@@ -34,7 +34,9 @@
         document.getElementById("btn-quiz-back").click();
       } else if (visible("draw-room")) {
         document.getElementById("btn-back").click();
-      } else if (visible("view-quiz") || visible("view-me") || visible("view-privacy")) {
+      } else if (visible("view-favs") || visible("view-privacy")) {
+        document.getElementById("btn-favs-back").click();
+      } else if (visible("view-quiz") || visible("view-me")) {
         document.getElementById("tab-draw").click();
       } else {
         App.exitApp();

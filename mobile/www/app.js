@@ -79,19 +79,20 @@ function dotsFor(mode, level) {
 /* ---------------- Tabs ---------------- */
 
 function showView(name) {
-  ["draw", "quiz", "me", "privacy"].forEach(v => {
+  ["draw", "quiz", "me", "favs", "privacy"].forEach(v => {
     const el = document.getElementById("view-" + v);
     if (el) el.classList.toggle("hidden", name !== v);
   });
   ["draw", "quiz", "me"].forEach(v => {
     const tab = document.getElementById("tab-" + v);
     if (!tab) return;
-    const active = name === v || (name === "privacy" && v === "me");
+    const active = name === v || ((name === "favs" || name === "privacy") && v === "me");
     tab.classList.toggle("active", active);
     tab.setAttribute("aria-selected", String(name === v));
     tab.tabIndex = active ? 0 : -1;
   });
-  if (name === "me") renderFavs();
+  if (name === "me") updateFavCount();
+  if (name === "favs") renderFavs();
   // TEST_MODE lives in quiz.js which loads after app.js — skip on first paint
   if (name === "draw" && typeof TEST_MODE !== "undefined" && typeof updateDrawControls === "function") {
     updateDrawControls();
@@ -100,6 +101,8 @@ function showView(name) {
 document.getElementById("tab-draw").addEventListener("click", () => showView("draw"));
 document.getElementById("tab-quiz").addEventListener("click", () => showView("quiz"));
 document.getElementById("tab-me").addEventListener("click", () => showView("me"));
+document.getElementById("btn-open-favs").addEventListener("click", () => showView("favs"));
+document.getElementById("btn-favs-back").addEventListener("click", () => showView("me"));
 document.getElementById("btn-open-privacy").addEventListener("click", () => showView("privacy"));
 document.getElementById("btn-privacy-back").addEventListener("click", () => showView("me"));
 document.querySelector(".tabbar").addEventListener("keydown", event => {
@@ -287,7 +290,8 @@ function wireCard(card) {
     const added = toggleFav(card.dataset.ch);
     fav.classList.toggle("active", added);
     fav.setAttribute("aria-pressed", String(added));
-    if (!added) renderFavs(); // un-favoriting from the Me list removes it there
+    updateFavCount();
+    if (!added) renderFavs(); // un-favoriting from the Favorites list removes it there
   });
   const tts = card.querySelector(".tts-btn");
   if (tts) tts.addEventListener("click", () => {
@@ -330,7 +334,12 @@ function renderDrawnCard(id) {
   slot.appendChild(card);
 }
 
-/* ---------------- Me page: favorites list ---------------- */
+/* ---------------- Favorites list (own page) ---------------- */
+
+function updateFavCount() {
+  const el = document.getElementById("fav-count");
+  if (el) el.textContent = String(getFavs().length);
+}
 
 function renderFavs() {
   const list = document.getElementById("fav-list");
@@ -351,6 +360,7 @@ function renderFavs() {
     wireCard(card);
     list.appendChild(card);
   });
+  updateFavCount();
 }
 
 /* ---------------- Share card as image ---------------- */
@@ -383,7 +393,7 @@ const CJK_FONT = '"Noto Sans SC","PingFang SC","Microsoft YaHei",sans-serif';
 const LAT_FONT = '"Nunito","Segoe UI",system-ui,sans-serif';
 
 function drawShareCard(id) {
-  const W = 1080, H = 1350;
+  const W = 1080, H = 1440;
   const cv = document.createElement("canvas");
   cv.width = W; cv.height = H;
   const ctx = cv.getContext("2d");
@@ -391,6 +401,7 @@ function drawShareCard(id) {
   const parts = CHAR_BREAKDOWN[id.ch] || [];
   const d = DIALOGUES[id.ch];
   let example = (d ? (d[2] || id.exEn) : id.exEn) || id.ex || "";
+  const usage = (id.usage || id.en || "").trim();
 
   /* paper background + frame */
   ctx.fillStyle = "#FBF4E6";
@@ -447,34 +458,64 @@ function drawShareCard(id) {
   /* pinyin + natural meaning */
   ctx.fillStyle = "#8A7A66";
   ctx.font = "800 34px " + LAT_FONT;
-  ctx.fillText(id.py, W / 2, 660);
+  ctx.fillText(id.py, W / 2, 640);
   ctx.fillStyle = "#2E241D";
   ctx.font = "800 46px " + LAT_FONT;
-  wrapText(ctx, id.en, 940).slice(0, 3).forEach((line, i) => {
-    ctx.fillText(line, W / 2, 740 + i * 62);
+  wrapText(ctx, id.en, 940).slice(0, 2).forEach((line, i) => {
+    ctx.fillText(line, W / 2, 715 + i * 62);
   });
 
-  /* example box */
-  ctx.fillStyle = "#FFFFFF";
-  ctx.strokeStyle = "rgba(46,36,29,.08)";
-  ctx.lineWidth = 2;
-  cRoundRect(ctx, 80, 950, W - 160, 250, 32);
+  /* usage box: "USE IT WHEN" (hidden when no distinct usage text) */
+  const hasUsage = usage && usage !== id.en.trim();
+  ctx.textAlign = "left";
+  if (hasUsage) {
+    ctx.fillStyle = "#FFFFFF";
+    ctx.strokeStyle = "rgba(46,36,29,.08)";
+    ctx.lineWidth = 2;
+    cRoundRect(ctx, 80, 850, W - 160, 230, 32);
+    ctx.fill(); ctx.stroke();
+    ctx.fillStyle = "#B4A78F";
+    ctx.font = "900 22px " + LAT_FONT;
+    ctx.textAlign = "left";
+    ctx.fillText("U S E   I T   W H E N", 120, 910);
+    ctx.fillStyle = "#5C4E3E";
+    ctx.font = "700 31px " + LAT_FONT;
+    wrapText(ctx, usage, 850).slice(0, 3).forEach((line, i) => {
+      ctx.fillText(line, 120, 962 + i * 44);
+    });
+  }
+
+  /* example box: EN + original Chinese */
+  const exY = hasUsage ? 1100 : 900;
+  const exH = hasUsage ? 210 : 300;
+  ctx.fillStyle = "#FFF9F0";
+  ctx.strokeStyle = "rgba(233,161,59,.35)";
+  cRoundRect(ctx, 80, exY, W - 160, exH, 32);
   ctx.fill(); ctx.stroke();
   ctx.fillStyle = "#B4A78F";
   ctx.font = "900 22px " + LAT_FONT;
-  ctx.textAlign = "left";
-  ctx.fillText("E X A M P L E", 120, 1010);
+  ctx.fillText("E X A M P L E", 120, exY + 58);
   ctx.fillStyle = "#5C4E3E";
-  ctx.font = "700 30px " + LAT_FONT;
-  wrapText(ctx, example, 840).slice(0, 4).forEach((line, i) => {
-    ctx.fillText(line, 120, 1064 + i * 42);
+  ctx.font = "700 29px " + LAT_FONT;
+  const enLines = wrapText(ctx, example, 850).slice(0, 3);
+  enLines.forEach((line, i) => {
+    ctx.fillText(line, 120, exY + 106 + i * 40);
   });
+  if (id.ex) {
+    ctx.fillStyle = "#8A7A66";
+    ctx.font = "600 27px " + CJK_FONT;
+    const zhLine = wrapText(ctx, id.ex, 850)[0];
+    if (zhLine) ctx.fillText(zhLine, 120, exY + 106 + enLines.length * 40 + 10);
+  }
 
-  /* footer */
+  /* footer: slogan + site */
   ctx.fillStyle = "#B4A78F";
   ctx.font = "700 26px " + LAT_FONT;
   ctx.textAlign = "center";
-  ctx.fillText("Stop memorizing idioms. Start using them.", W / 2, 1282);
+  ctx.fillText("Stop memorizing idioms. Start using them.", W / 2, 1332);
+  ctx.fillStyle = "#C8402E";
+  ctx.font = "900 30px " + LAT_FONT;
+  ctx.fillText("chengyu.bbroot.com", W / 2, 1378);
 
   return cv.toDataURL("image/png");
 }

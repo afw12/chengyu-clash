@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Chengyu Clash · Win arguments with Chinese idioms</title>
 <meta name="description" content="Draw Chinese idiom cards to compliment or roast. Learn chengyu the fun way.">
-<link rel="stylesheet" href="style.css?v=63">
+<link rel="stylesheet" href="style.css?v=64">
 </head>
 <body>
 <svg class="icon-sprite" aria-hidden="true" focusable="false">
@@ -198,15 +198,21 @@
       <h2 class="draw-title">Settings <span class="zh-sub" lang="zh-CN">设置</span></h2>
       <div class="me-card">
         <div class="me-row"><span>Tokens <span class="zh-sub" lang="zh-CN">代币</span></span><span class="wallet" id="wallet3" aria-live="polite">⬡ × 0</span></div>
+        <button class="me-row me-link" id="btn-open-favs" type="button"><span>Favorites <span class="zh-sub" lang="zh-CN">收藏</span></span><span class="fav-count" id="fav-count">0</span><span class="chev" aria-hidden="true">›</span></button>
         <div id="me-reset-slot"></div>
         <button class="me-row me-link" id="btn-open-privacy" type="button">Privacy Policy <span class="zh-sub" lang="zh-CN">隐私政策</span><span class="chev" aria-hidden="true">›</span></button>
         <div class="me-row dim"><span>Version</span><span>1.0.0</span></div>
       </div>
-      <div class="me-favs">
-        <h3>Favorites <span class="zh-sub" lang="zh-CN">收藏</span></h3>
-        <div id="fav-list" class="fav-list"></div>
-      </div>
       <p class="me-note">Chengyu Clash works fully offline. Your progress is stored only on this device.</p>
+    </div>
+  </section>
+
+  <!-- ============ FAVORITES ============ -->
+  <section id="view-favs" class="hidden" role="tabpanel" aria-labelledby="favs-heading">
+    <div class="me-wrap">
+      <button id="btn-favs-back" class="ghost" type="button"><svg class="icon" aria-hidden="true"><use href="#icon-back"></use></svg> Settings</button>
+      <h2 class="draw-title" id="favs-heading">Favorites <span class="zh-sub" lang="zh-CN">收藏</span></h2>
+      <div id="fav-list" class="fav-list"></div>
     </div>
   </section>
 
@@ -274,7 +280,7 @@
 <script src="data27.js?v=63"></script>
 <script src="data28.js?v=63"></script>
 <script src="dialogues.js?v=63"></script>
-<script src="app.js?v=63"></script>
+<script src="app.js?v=64"></script>
 <script src="quiz.js?v=63"></script>
 <script src="quiz-extra1.js?v=63"></script>
 <script src="quiz-extra2.js?v=63"></script>
