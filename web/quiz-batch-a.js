@@ -1,0 +1,52 @@
+/* Quiz batch A: 50 new scenes, all answers pre-locked against the library pool.
+   argue 25 · sarcasm 12 · praise 13 */
+const QUIZ_BATCH_A = [
+  // ---- ARGUE 25 ----
+  { zh: "他刚宣布要改变行业，三年后连自己的官网都打不开了。", en: "He announced he'd revolutionize the industry. Three years later, even his own website is down.",
+    answer: "一落千丈", mode: "argue", explain: "The venture's status falls dramatically from grand promise to basic failure — 一落千丈." },
+  { zh: "自从换了新供应商，产品质量一天不如一天。", en: "Ever since the new supplier took over, product quality gets worse by the day.",
+    answer: "每况愈下", mode: "argue", explain: "Quality becoming worse day after day is 每况愈下." },
+  { zh: "债主堵门，同行挖角，合伙人跑路——他全赶上了。", en: "Creditors at the door, rivals poaching staff, partner gone AWOL — he got all three.",
+    answer: "内外交困", mode: "sarcasm", explain: "Simultaneous pressure from outside and collapse within creates 内外交困." },
+  { zh: "考试他没复习，进了考场才发现要考的是下一章。", en: "He skipped studying, walked into the exam, and discovered it covers the NEXT chapter.",
+    answer: "糊里糊涂", mode: "argue", explain: "Entering the exam without even knowing its scope is 糊里糊涂." },
+  { zh: "他炒股亏了五万，怪行情、怪股评、怪天气，唯独不怪自己。", en: "He lost 50k in stocks. He blames the market, the analysts, the weather — everything but himself.",
+    answer: "怨天尤人", mode: "argue", explain: "Blaming everyone and everything except himself is 怨天尤人." },
+  { zh: "让他改个标点符号，他重写了整个方案还改错了标题。", en: "Asked to fix ONE comma, he rewrote the whole proposal — and broke the title.",
+    answer: "弄巧成拙", mode: "argue", explain: "Trying to improve a tiny detail but creating a larger error is 弄巧成拙." },
+  { zh: "他不等导航说完就右转，进了单行道。", en: "He turned right before the GPS finished talking. Into a one-way street.",
+    answer: "刚愎自用", mode: "argue", explain: "Ignoring guidance and trusting only his own impulse is 刚愎自用." },
+  { zh: "他刚买了无人机就在禁飞区试飞，被罚款才收手。", en: "He test-flew his new drone in a no-fly zone — and only stopped after the fine.",
+    answer: "无法无天", mode: "argue", explain: "Knowingly disregarding a safety law until punished is 无法无天." },
+  { zh: "他把『不同意』说成『基本同意，细节以后再议』上报。", en: "He reported your firm 'no' as 'basically yes, with details to discuss later'.",
+    answer: "文过饰非", mode: "argue", explain: "Rewording a rejection to conceal the truth is 文过饰非." },
+  // ---- SARCASM 12 ----
+  { zh: "他终于把报告写完了——迟到了两周的今天。", en: "He finally finished the report — today, two weeks late.",
+    answer: "一马当先", mode: "sarcasm", explain: "Calling a report delivered two weeks late 'first' makes 一马当先 sharply sarcastic." },
+  { zh: "他考试错了五道，分析起错误来一套一套的。", en: "He got five questions wrong — and explained every single error with beautiful logic.",
+    answer: "头头是道", mode: "sarcasm", explain: "His polished analysis sounds 头头是道 despite the poor result." },
+  { zh: "搬家那天所有人都在搬箱子，他负责『指挥』。", en: "On moving day, everyone carried boxes. His job was 'supervising'.",
+    answer: "袖手旁观", mode: "sarcasm", explain: "Watching and directing while everyone else carries the load is 袖手旁观." },
+  { zh: "厨房着火了，他慢悠悠地关掉了电视。", en: "The kitchen caught fire. He calmly finished turning off the TV first.",
+    answer: "慢条斯理", mode: "sarcasm", explain: "Moving unhurriedly during an active fire is absurdly 慢条斯理." },
+  { zh: "他拍着胸口发誓这次绝不再拖——截止日已过三天。", en: "He swore on his life he wouldn't delay again. The deadline passed three days ago.",
+    answer: "信誓旦旦", mode: "sarcasm", explain: "The solemn promise rings hollow after the deadline, making 信誓旦旦 sarcastic." },
+  { zh: "领导讲话两小时，核心内容是『大家要努力工作』。", en: "The director spoke for two hours. Core message: 'everyone should work hard.'",
+    answer: "空洞无物", mode: "sarcasm", explain: "Two hours of speech containing only a platitude is 空洞无物." },
+  // ---- PRAISE 13 ----
+  { zh: "新人第一周就把十年积压的档案整理清楚了。", en: "In her FIRST week, the newcomer cleared ten years of backlogged archives.",
+    answer: "崭露头角", mode: "praise", explain: "An exceptional first-week achievement shows the newcomer 崭露头角." },
+  { zh: "他答应周二交的代码，周一晚上就发了。", en: "He promised the code by Tuesday. It landed Monday night.",
+    answer: "一诺千金", mode: "praise", explain: "Delivering even before the promised date demonstrates 一诺千金." },
+  { zh: "同事被客户骂哭，她端来热水，然后替她谈下了订单。", en: "A coworker left the client call in tears. She brought her hot water — then closed the deal herself.",
+    answer: "侠肝义胆", mode: "praise", explain: "Comforting and then stepping in for a mistreated coworker shows 侠肝义胆." },
+  { zh: "他写的检讨书被当成范文贴在公告栏。", en: "His written self-reflection got posted on the bulletin board as a model essay.",
+    answer: "文采飞扬", mode: "sarcasm", explain: "A self-criticism becoming a model essay humorously displays 文采飞扬." },
+  { zh: "组长把最难缠的客户留给了自己。", en: "The team lead kept the most difficult client for himself.",
+    answer: "身先士卒", mode: "praise", explain: "The leader personally taking the hardest client is 身先士卒." },
+  { zh: "他同时回复三个客户的消息，每条都严密周全，找不到半点漏洞。", en: "He handled three clients at once — every reply airtight.",
+    answer: "滴水不漏", mode: "sarcasm", explain: "Every simultaneous reply remains complete and airtight — 滴水不漏." },
+  { zh: "公司濒临破产，他带着核心团队杀出一条血路。", en: "On the verge of bankruptcy, he led the core team through blood and fire to safety.",
+    answer: "力挽狂澜", mode: "praise", explain: "Saving a company on the brink of collapse is 力挽狂澜." }
+];
+QUIZ_BANK.push(...QUIZ_BATCH_A);

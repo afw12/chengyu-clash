@@ -1,0 +1,30 @@
+# ---- private project files (never publish) ----
+backup/
+docs/
+.agentflow/
+tools/
+HANDOFF.md
+产品构思*
+*.md.tmp
+
+# ---- mobile build artifacts ----
+node_modules/
+mobile/node_modules/
+mobile/www/
+mobile/android/.gradle/
+mobile/android/build/
+mobile/android/app/build/
+mobile/android/capacitor-cordova-android-plugins/build/
+mobile/android/local.properties
+mobile/android/.idea/
+mobile/android/captures/
+mobile/android/app/src/main/assets/
+
+# ---- secrets ----
+*.keystore
+!debug.keystore
+*.jks
+
+# ---- OS junk ----
+.DS_Store
+Thumbs.db

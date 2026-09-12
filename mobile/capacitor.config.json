@@ -1,0 +1,14 @@
+{
+  "appId": "com.chengyuclash.app",
+  "appName": "Chengyu Clash",
+  "webDir": "www",
+  "android": {
+    "allowMixedContent": false
+  },
+  "ios": {
+    "contentInset": "never"
+  },
+  "server": {
+    "androidScheme": "https"
+  }
+}

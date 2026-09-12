@@ -1,0 +1,102 @@
+# Codemagic cloud build config — builds BOTH platforms without any local Apple hardware.
+# This file MUST live at the repository root (Codemagic only reads it from there),
+# so every script starts with `cd mobile` where package.json / the Android project live.
+# Docs: https://docs.codemagic.io/yaml/yaml-getting-started/
+# iOS:   cloud macOS machine runs `cap add ios` + builds/signs (needs Apple signing
+#        credentials configured in Codemagic UI before the first release build).
+# Android: cloud machine or local Windows (see mobile/README) can both build the APK/AAB.
+
+workflows:
+  android-debug:
+    name: Chengyu Clash — Android (debug)
+    instance_type: linux
+    max_build_duration: 60
+    environment:
+      node: latest
+    scripts:
+      - name: Install dependencies and sync web
+        script: |
+          cd mobile
+          npm ci
+          npm run sync
+          npx cap sync android
+      - name: Build debug APK
+        script: |
+          cd mobile
+          ./android/gradlew -p android assembleDebug
+    publishing:
+      email:
+        recipients:
+          - YOUR_EMAIL@example.com
+      files:
+        - mobile/android/app/build/outputs/apk/debug/app-debug.apk
+
+  android-release:
+    name: Chengyu Clash — Android (release AAB)
+    instance_type: linux
+    max_build_duration: 60
+    environment:
+      node: latest
+      # Add these as secured environment variables in the Codemagic UI
+      # (groups → chengyuclash-release), base64-encode the keystore file into
+      # $CM_KEYSTORE_FILE_B64 or upload it via Codemagic's file variables.
+      groups:
+        - chengyuclash-release
+    scripts:
+      - name: Install dependencies and sync web (release gate)
+        script: |
+          cd mobile
+          npm ci
+          npm run sync -- --release
+          npx cap sync android
+      - name: Decode keystore and build signed AAB
+        script: |
+          cd mobile
+          echo "$CM_KEYSTORE_FILE_B64" | base64 --decode > android/app/release.keystore
+          ./android/gradlew -p android bundleRelease \
+            -Pandroid.injected.signing.store.file="$PWD/android/app/release.keystore" \
+            -Pandroid.injected.signing.store.password="$CM_KEYSTORE_PASSWORD" \
+            -Pandroid.injected.signing.key.alias="$CM_KEY_ALIAS" \
+            -Pandroid.injected.signing.key.password="$CM_KEY_PASSWORD"
+    publishing:
+      email:
+        recipients:
+          - YOUR_EMAIL@example.com
+      files:
+        - mobile/android/app/build/outputs/bundle/release/app-release.aab
+
+  ios-build:
+    name: Chengyu Clash — iOS
+    instance_type: mac_mini_m2
+    max_build_duration: 120
+    environment:
+      node: latest
+      xcode: latest
+      # Sign with automatic code signing (configure App Store Connect API key
+      # in Codemagic UI: Teams → Codemagic API → connections) or manual certs.
+      ios_signing:
+        distribution_type: app_store
+        bundle_identifier: com.chengyuclash.app
+    scripts:
+      - name: Install dependencies, add iOS platform, sync web
+        script: |
+          cd mobile
+          npm ci
+          npm run sync -- --release
+          npx cap add ios
+          npx cap sync ios
+      - name: Build and sign ipa
+        script: |
+          cd mobile
+          xcode-project build-ipa \
+            --workspace "ios/App/App.xcworkspace" \
+            --scheme "App"
+    publishing:
+      email:
+        recipients:
+          - YOUR_EMAIL@example.com
+      # TestFlight distribution once signing is configured:
+      # app_store_connect:
+      #   api_key: $APP_STORE_CONNECT_PRIVATE_KEY
+      #   key_id: $APP_STORE_CONNECT_KEY_IDENTIFIER
+      #   issuer_id: $APP_STORE_CONNECT_ISSUER_ID

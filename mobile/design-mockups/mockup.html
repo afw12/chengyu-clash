@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chengyu Clash — Mobile UI Redesign Mockups</title>
+<style>
+  @font-face {
+    font-family: "Nunito";
+    font-style: normal;
+    font-weight: 200 1000;
+    src: url("../web/fonts/nunito-latin.woff2") format("woff2");
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: #E8E2D6;
+    font-family: "Nunito", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    color: #2E241D;
+    display: flex; flex-wrap: wrap; gap: 48px;
+    justify-content: center; align-items: flex-start;
+    padding: 48px 24px;
+  }
+  .shot { text-align: center; }
+  .shot h2 { margin-bottom: 14px; font-size: 17px; color: #6E5F4F; font-weight: 800; }
+  .phone {
+    width: 375px; height: 812px;
+    background: #FBF4E6;
+    border-radius: 40px;
+    border: 10px solid #1A1410;
+    overflow: hidden;
+    display: flex; flex-direction: column;
+    box-shadow: 0 24px 60px rgba(40,25,10,.28);
+    text-align: left; position: relative;
+  }
+  /* subtle rice-paper grain */
+  .phone::before {
+    content: ""; position: absolute; inset: 0; pointer-events: none;
+    background:
+      radial-gradient(300px 200px at 85% -5%, rgba(200,64,46,.06), transparent 70%),
+      radial-gradient(260px 220px at -10% 30%, rgba(233,161,59,.07), transparent 70%);
+  }
+  /* ---------- top bar ---------- */
+  .topbar {
+    display: flex; align-items: center; gap: 10px;
+    padding: 18px 18px 12px;
+  }
+  .seal {
+    width: 40px; height: 40px; border-radius: 10px;
+    background: linear-gradient(160deg, #D84832, #A93021);
+    color: #FFF6E8; display: flex; align-items: center; justify-content: center;
+    font-size: 22px; font-weight: 700; transform: rotate(-4deg);
+    box-shadow: 0 4px 10px rgba(169,48,33,.35), inset 0 -2px 0 rgba(0,0,0,.15);
+    flex: 0 0 auto;
+  }
+  .brand-name { font-size: 19px; font-weight: 900; letter-spacing: .2px; }
+  .brand-name em { font-style: normal; color: #C8402E; }
+  .token-chip {
+    margin-left: auto; display: flex; align-items: center; gap: 6px;
+    background: #fff; border: 1.5px solid rgba(46,36,29,.10);
+    border-radius: 999px; padding: 6px 12px;
+    font-size: 13.5px; font-weight: 800;
+    box-shadow: 0 2px 8px rgba(120,80,40,.08);
+  }
+  .token-chip svg { width: 14px; height: 14px; }
+  /* ---------- content ---------- */
+  .content { flex: 1; overflow: hidden; padding: 6px 18px 0; position: relative; }
+  .greeting { font-size: 26px; font-weight: 900; line-height: 1.2; margin: 8px 0 4px; }
+  .greeting-sub { font-size: 14px; color: #8A7A66; font-weight: 700; margin-bottom: 18px; }
+  .mode-list { display: flex; flex-direction: column; gap: 12px; }
+  .mode {
+    display: flex; align-items: center; gap: 14px;
+    background: #fff; border: 1.5px solid rgba(46,36,29,.08);
+    border-radius: 20px; padding: 16px;
+    box-shadow: 0 4px 16px rgba(120,80,40,.07);
+    position: relative; overflow: hidden;
+  }
+  .mode::after {
+    content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 5px;
+  }
+  .mode.praise::after { background: #3E9E7A; }
+  .mode.argue::after  { background: #C8402E; }
+  .mode.sarcasm::after{ background: #9B6BD8; }
+  .mode-icon {
+    width: 46px; height: 46px; border-radius: 14px; flex: 0 0 auto;
+    display: flex; align-items: center; justify-content: center; font-size: 22px;
+  }
+  .mode.praise  .mode-icon { background: rgba(63,163,122,.13); }
+  .mode.argue   .mode-icon { background: rgba(200,64,46,.11); }
+  .mode.sarcasm .mode-icon { background: rgba(155,107,216,.12); }
+  .mode b { display: block; font-size: 17px; font-weight: 900; }
+  .mode small { display: block; font-size: 13px; color: #8A7A66; font-weight: 700; margin-top: 2px; }
+  .mode .chev { margin-left: auto; color: #C9BBA8; font-size: 20px; font-weight: 900; }
+  .daily {
+    margin-top: 16px; border-radius: 20px; padding: 14px 16px;
+    background: linear-gradient(135deg, #FFF3DF, #FFE8C7);
+    border: 1.5px solid rgba(226,162,59,.35);
+    display: flex; align-items: center; gap: 12px;
+  }
+  .daily .flame { font-size: 22px; }
+  .daily b { font-size: 14.5px; font-weight: 900; display: block; }
+  .daily small { font-size: 12.5px; color: #9A7B4F; font-weight: 700; }
+  .daily .go { margin-left: auto; background: #E2A23B; color: #fff; border-radius: 999px; padding: 7px 14px; font-size: 13px; font-weight: 900; }
+  /* ---------- bottom tabs ---------- */
+  .tabbar {
+    display: flex; background: #fff;
+    border-top: 1.5px solid rgba(46,36,29,.08);
+    padding: 10px 8px calc(14px + 8px);
+  }
+  .tabitem { flex: 1; text-align: center; font-size: 11.5px; font-weight: 800; color: #B4A78F; }
+  .tabitem .tico { font-size: 22px; display: block; margin-bottom: 2px; }
+  .tabitem.active { color: #C8402E; }
+  /* ---------- card screen ---------- */
+  .lv-pill {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: #C8402E; color: #FFF3E4;
+    border-radius: 999px; padding: 7px 14px;
+    font-size: 13px; font-weight: 900; letter-spacing: .3px;
+  }
+  .lv-pill .dots { letter-spacing: 2px; font-size: 11px; opacity: .85; }
+  .card-hero {
+    margin-top: 14px;
+    background: #fff; border-radius: 24px;
+    border: 1.5px solid rgba(46,36,29,.08);
+    box-shadow: 0 10px 30px rgba(120,80,40,.10);
+    padding: 22px 20px; position: relative; overflow: hidden;
+  }
+  .card-hero::before {
+    content: ""; position: absolute; inset: 10px; pointer-events: none;
+    border: 1.5px solid rgba(200,64,46,.14); border-radius: 17px;
+  }
+  .hanzi-row { display: flex; justify-content: center; gap: 10px; margin: 10px 0 6px; }
+  .hz {
+    width: 64px; height: 64px; border-radius: 14px;
+    background: #FBF4E6; border: 1.5px solid rgba(46,36,29,.09);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 34px; font-weight: 700;
+    box-shadow: 0 3px 10px rgba(120,80,40,.08);
+    position: relative;
+  }
+  .hz i {
+    position: absolute; bottom: -20px; font-style: normal;
+    font-size: 11px; color: #A93021; font-weight: 800; white-space: nowrap;
+  }
+  .pinyin { text-align: center; color: #B4A78F; font-weight: 800; font-size: 14px; margin-top: 30px; letter-spacing: 1px; }
+  .meaning { text-align: center; font-size: 18.5px; font-weight: 900; margin-top: 6px; line-height: 1.35; }
+  .example {
+    margin: 16px 0 0; background: #FBF4E6; border-radius: 14px; padding: 12px 14px;
+    font-size: 14px; font-weight: 700; line-height: 1.45; color: #5C4E3E;
+  }
+  .example .lbl { font-size: 11px; color: #B4A78F; font-weight: 900; letter-spacing: .8px; display: block; margin-bottom: 3px; }
+  .stamp {
+    position: absolute; top: 14px; right: 14px;
+    width: 34px; height: 34px; border-radius: 8px; transform: rotate(6deg);
+    background: rgba(200,64,46,.92); color: #FFF3E4;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 15px; font-weight: 700; line-height: 1;
+    box-shadow: 0 3px 8px rgba(169,48,33,.3);
+  }
+  .actions { display: flex; gap: 10px; margin-top: 16px; }
+  .btn {
+    flex: 1; border-radius: 16px; padding: 14px 10px;
+    font-size: 15px; font-weight: 900; text-align: center;
+    border: 1.5px solid rgba(46,36,29,.10); background: #fff; color: #2E241D;
+    box-shadow: 0 4px 12px rgba(120,80,40,.08);
+  }
+  .btn.primary {
+    background: linear-gradient(160deg, #D84832, #B93522); color: #fff;
+    border: none; box-shadow: 0 8px 20px rgba(200,64,46,.35), inset 0 -2px 0 rgba(0,0,0,.15);
+    flex: 1.6;
+  }
+  /* ---------- quiz screen ---------- */
+  .scene-card {
+    background: #fff; border-radius: 22px; padding: 18px;
+    border: 1.5px solid rgba(46,36,29,.08);
+    box-shadow: 0 6px 20px rgba(120,80,40,.08);
+  }
+  .scene-lbl { font-size: 11.5px; font-weight: 900; letter-spacing: 1px; color: #B4A78F; margin-bottom: 8px; }
+  .scene-en { font-size: 16.5px; font-weight: 800; line-height: 1.5; }
+  .q-ask { font-size: 15.5px; font-weight: 900; margin: 16px 0 12px; }
+  .q-ask em { font-style: normal; color: #C8402E; }
+  .opt-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .opt {
+    background: #fff; border: 2px solid rgba(46,36,29,.10); border-radius: 18px;
+    padding: 16px 8px 12px; text-align: center;
+    box-shadow: 0 4px 12px rgba(120,80,40,.06);
+  }
+  .opt .ozh { font-size: 25px; font-weight: 700; letter-spacing: 3px; }
+  .opt .olit { font-size: 11.5px; color: #A93021; font-weight: 800; margin-top: 6px; }
+  .opt.selected { border-color: #C8402E; background: #FFF6EF; box-shadow: 0 6px 16px rgba(200,64,46,.15); }
+  .quiz-cta { margin-top: 14px; }
+</style>
+</head>
+<body>
+
+  <!-- ================= SCREEN 1: HOME ================= -->
+  <div class="shot">
+    <h2>① 首页 Home — 底部导航 + 紧凑顶栏</h2>
+    <div class="phone">
+      <div class="topbar">
+        <div class="seal">成</div>
+        <div class="brand-name">Chengyu <em>Clash</em></div>
+        <div class="token-chip">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#E2A23B" stroke-width="2.4"><path d="M12 2 20 7v10l-8 5-8-5V7l8-5Z"/></svg>
+          12
+        </div>
+      </div>
+      <div class="content">
+        <div class="greeting">What do you<br>need today?</div>
+        <div class="greeting-sub">Pick a mode and grab your ammo.</div>
+        <div class="mode-list">
+          <div class="mode praise">
+            <div class="mode-icon">✨</div>
+            <div><b>Compliment</b><small>Make someone's day — like a pro.</small></div>
+            <div class="chev">›</div>
+          </div>
+          <div class="mode argue">
+            <div class="mode-icon">🔥</div>
+            <div><b>Roast</b><small>Direct hits, heavy artillery.</small></div>
+            <div class="chev">›</div>
+          </div>
+          <div class="mode sarcasm">
+            <div class="mode-icon">🎭</div>
+            <div><b>Sarcasm</b><small>Praise on top, poison underneath.</small></div>
+            <div class="chev">›</div>
+          </div>
+        </div>
+        <div class="daily">
+          <div class="flame">🔥</div>
+          <div><b>Daily Quiz</b><small>5 scenes · earn 10 Tokens</small></div>
+          <div class="go">GO</div>
+        </div>
+      </div>
+      <div class="tabbar">
+        <div class="tabitem active"><span class="tico">🃏</span>Draw</div>
+        <div class="tabitem"><span class="tico">❓</span>Quiz</div>
+        <div class="tabitem"><span class="tico">👤</span>Me</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= SCREEN 2: DRAWN CARD ================= -->
+  <div class="shot">
+    <h2>② 抽卡结果 Card — 汉字当主角 + 印章点缀</h2>
+    <div class="phone">
+      <div class="topbar">
+        <div class="seal">成</div>
+        <div class="brand-name">Roast <em>Mode</em></div>
+        <div class="token-chip">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#E2A23B" stroke-width="2.4"><path d="M12 2 20 7v10l-8 5-8-5V7l8-5Z"/></svg>
+          12
+        </div>
+      </div>
+      <div class="content">
+        <div class="card-hero">
+          <div class="stamp">成<br>语</div>
+          <span class="lv-pill"><span class="dots">●●●</span> Lv3 · Nuclear</span>
+          <div class="hanzi-row">
+            <div class="hz">背<i>betray</i></div>
+            <div class="hz">信<i>trust</i></div>
+            <div class="hz">弃<i>abandon</i></div>
+            <div class="hz">义<i>honor</i></div>
+          </div>
+          <div class="pinyin">bèi xìn qì yì ▶</div>
+          <div class="meaning">Betrayal as a lifestyle upgrade.</div>
+          <div class="example">
+            <span class="lbl">EXAMPLE</span>
+            "Took the recipe, opened next door — betray trust abandon righteousness."
+          </div>
+          <div class="actions">
+            <div class="btn">🔊 Play</div>
+            <div class="btn">Learn more</div>
+            <div class="btn primary">Draw again</div>
+          </div>
+        </div>
+      </div>
+      <div class="tabbar">
+        <div class="tabitem active"><span class="tico">🃏</span>Draw</div>
+        <div class="tabitem"><span class="tico">❓</span>Quiz</div>
+        <div class="tabitem"><span class="tico">👤</span>Me</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= SCREEN 3: QUIZ ================= -->
+  <div class="shot">
+    <h2>③ 答题 Quiz — 场景卡 + 2×2 选项</h2>
+    <div class="phone">
+      <div class="topbar">
+        <div class="seal">成</div>
+        <div class="brand-name">Easy <em>Quiz</em></div>
+        <div class="token-chip">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#E2A23B" stroke-width="2.4"><path d="M12 2 20 7v10l-8 5-8-5V7l8-5Z"/></svg>
+          12
+        </div>
+      </div>
+      <div class="content">
+        <div class="scene-card">
+          <div class="scene-lbl">THE SCENE</div>
+          <div class="scene-en">His dumplings made it into a food documentary.</div>
+        </div>
+        <div class="q-ask">Which chengyu is the <em>perfect reply</em>?</div>
+        <div class="opt-grid">
+          <div class="opt"><div class="ozh">名不虚传</div><div class="olit">name not vain</div></div>
+          <div class="opt selected"><div class="ozh">登峰造极</div><div class="olit">climb peak reach top</div></div>
+          <div class="opt"><div class="ozh">青出于蓝</div><div class="olit">blue from indigo</div></div>
+          <div class="opt"><div class="ozh">独一无二</div><div class="olit">one of one</div></div>
+        </div>
+        <div class="actions quiz-cta">
+          <div class="btn">Hint</div>
+          <div class="btn primary">Check answer</div>
+        </div>
+      </div>
+      <div class="tabbar">
+        <div class="tabitem"><span class="tico">🃏</span>Draw</div>
+        <div class="tabitem active"><span class="tico">❓</span>Quiz</div>
+        <div class="tabitem"><span class="tico">👤</span>Me</div>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>
