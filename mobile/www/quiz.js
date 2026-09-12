@@ -2,7 +2,7 @@
    Easy: multiple choice (+1 Token) · Hard: rebuild the literal image (+2 Tokens).
    Set TEST_MODE to false before launch to restore daily limits and draw costs. */
 
-const TEST_MODE = false; // injected by sync-web.js --release  // testing: unlimited quiz/draws, no Token spending
+const TEST_MODE = true;  // testing: unlimited quiz/draws, no Token spending
 const COOKIE_COST = 2;   // Tokens to unlock one draw
 const QUIZ_DAILY = 5;    // rounds per day, per difficulty
 
