@@ -28,8 +28,9 @@ workflows:
       email:
         recipients:
           - YOUR_EMAIL@example.com
-      files:
-        - mobile/android/app/build/outputs/apk/debug/app-debug.apk
+      # 注意：Codemagic publishing 不允许顶层 `files:` 字段（原报错根因）。
+      # APK/AAB/IPA 由默认 artifacts 规则（**/*.apk / **/*.aab / **/*.ipa）
+      # 自动收集并在邮件里给出下载链接。
 
   android-release:
     name: Chengyu Clash — Android (release AAB)
@@ -62,8 +63,7 @@ workflows:
       email:
         recipients:
           - YOUR_EMAIL@example.com
-      files:
-        - mobile/android/app/build/outputs/bundle/release/app-release.aab
+      # （同上：不留 files 字段，产物自动收集）
 
   ios-build:
     name: Chengyu Clash — iOS
