@@ -3,8 +3,7 @@
   "appName": "Chengyu Clash",
   "webDir": "www",
   "android": {
-    "allowMixedContent": false,
-    "adjustMarginsForEdgeToEdge": "force"
+    "allowMixedContent": false
   },
   "ios": {
     "contentInset": "never"
