@@ -100,3 +100,52 @@ workflows:
       #   api_key: $APP_STORE_CONNECT_PRIVATE_KEY
       #   key_id: $APP_STORE_CONNECT_KEY_IDENTIFIER
       #   issuer_id: $APP_STORE_CONNECT_ISSUER_ID
+
+  # 不需要任何 Apple 签名/账号：产出 iPhone 模拟器 .app 的 zip，
+  # 直接上传 Appetize.io 即可在 Windows 浏览器里跑 iOS 模拟器。
+  # 注意：模拟器包仅用于 Appetize 预检，不能安装到真机，也不能上 TestFlight。
+  ios-simulator:
+    name: Chengyu Clash — iOS (simulator for Appetize)
+    instance_type: mac_mini_m2
+    max_build_duration: 60
+    environment:
+      node: latest
+      xcode: latest
+    scripts:
+      - name: Install dependencies, add iOS platform, sync web
+        script: |
+          cd mobile
+          npm ci
+          npm run sync -- --release
+          npx cap add ios
+          npx cap sync ios
+      - name: Build for iOS Simulator (unsigned)
+        script: |
+          cd mobile
+          if [ -d "ios/App/App.xcworkspace" ]; then
+            WORKSPACE_ARGS=(-workspace "ios/App/App.xcworkspace")
+          else
+            WORKSPACE_ARGS=(-project "ios/App/App.xcodeproj")
+          fi
+          xcodebuild "${WORKSPACE_ARGS[@]}" \
+            -scheme "App" \
+            -configuration Debug \
+            -sdk iphonesimulator \
+            -destination "generic/platform=iOS Simulator" \
+            -derivedDataPath "ios/build" \
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGN_IDENTITY="" \
+            build
+      - name: Zip the simulator .app for Appetize
+        script: |
+          cd mobile
+          APP_PATH=$(find ios/build/Build/Products/Debug-iphonesimulator -maxdepth 1 -name "*.app" | head -n 1)
+          echo "Simulator app: $APP_PATH"
+          # ditto keeps symlinks/metadata intact, which Appetize requires
+          ditto -c -k --keepParent "$APP_PATH" "$CM_BUILD_DIR/chengyu-clash-ios-simulator.zip"
+    publishing:
+      email:
+        recipients:
+          - YOUR_EMAIL@example.com
+      artifacts:
+        - chengyu-clash-ios-simulator.zip
