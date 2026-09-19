@@ -3,8 +3,9 @@
    Set TEST_MODE to false before launch to restore daily limits and draw costs. */
 
 const TEST_MODE = true;  // testing: unlimited quiz/draws, no Token spending
-const COOKIE_COST = 2;   // Tokens to unlock one draw
-const QUIZ_DAILY = 5;    // rounds per day, per difficulty
+const COOKIE_COST = 2;   // Tokens to unlock one draw after the free daily draws are used
+const FREE_DRAWS = 5;    // free draws per day, per user, before Tokens are charged
+const QUIZ_DAILY = 5;    // total quiz rounds per day, shared across both difficulties
 
 function pick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
 
@@ -58,8 +59,38 @@ function quizState() {
   return s;
 }
 function saveQuizState(s) { localStorage.setItem("cc_quiz", JSON.stringify(s)); }
-function attemptsLeft(level) {
-  return TEST_MODE ? Infinity : QUIZ_DAILY - quizState()[level];
+function quizUsedToday() {
+  const s = quizState();
+  return s.easy + s.hard;   // shared daily pool across both difficulties
+}
+function attemptsLeft() {
+  return TEST_MODE ? Infinity : QUIZ_DAILY - quizUsedToday();
+}
+
+/* ---------------- daily free draws ----------------
+   Everyone gets FREE_DRAWS free draws per day; after that each draw
+   costs COOKIE_COST Tokens. */
+function drawState() {
+  const now = new Date();
+  const today = [
+    now.getFullYear(),
+    String(now.getMonth() + 1).padStart(2, "0"),
+    String(now.getDate()).padStart(2, "0")
+  ].join("-");
+  let s;
+  try { s = JSON.parse(localStorage.getItem("cc_draws") || ""); } catch (e) { s = null; }
+  if (!s || typeof s !== "object" || s.d !== today) s = { d: today, free: 0 };
+  // shape + clamp: tampered counts (negative, float, > daily cap) reset to legal bounds
+  s.free = (Number.isInteger(s.free) && s.free > 0) ? Math.min(s.free, FREE_DRAWS) : 0;
+  return s;
+}
+function freeDrawsLeft() {
+  return TEST_MODE ? Infinity : FREE_DRAWS - drawState().free;
+}
+function recordFreeDraw() {
+  const s = drawState();
+  s.free += 1;
+  localStorage.setItem("cc_draws", JSON.stringify(s));
 }
 
 /* ---------------- question bank ----------------
@@ -561,7 +592,7 @@ function makeOptions(q) {
 }
 
 function startQuiz(level) {
-  if (attemptsLeft(level) <= 0) { renderAttempts(); return; }
+  if (attemptsLeft() <= 0) { renderAttempts(); return; }
   quizLevel = level;
   currentQ = pickQuestion();
   optionsLocked = false;
@@ -622,13 +653,12 @@ function renderAttempts() {
     return;
   }
   el.innerHTML =
-    `Easy left today: <b>${attemptsLeft("easy")}/${QUIZ_DAILY}</b> · ` +
-    `Hard left today: <b>${attemptsLeft("hard")}/${QUIZ_DAILY}</b> · ` +
+    `Rounds left today: <b>${attemptsLeft()}/${QUIZ_DAILY}</b> (Easy +1 · Hard +2 Tokens) · ` +
     `Tokens: ⬡ × ${getCookies()}`;
 }
 
 function levelExhausted() {
-  return attemptsLeft(quizLevel) <= 0;
+  return attemptsLeft() <= 0;
 }
 
 function showResult(correct, earned, extra) {
@@ -658,7 +688,7 @@ function answerEasy(ch, btn) {
   let state = null;
   if (!TEST_MODE) {
     state = quizState();
-    if (state[quizLevel] >= QUIZ_DAILY) {
+    if (quizUsedToday() >= QUIZ_DAILY) {
       backToQuizSelect();
       return;
     }
@@ -690,7 +720,7 @@ function submitHard() {
   let state = null;
   if (!TEST_MODE) {
     state = quizState();
-    if (state[quizLevel] >= QUIZ_DAILY) {
+    if (quizUsedToday() >= QUIZ_DAILY) {
       backToQuizSelect();
       return;
     }

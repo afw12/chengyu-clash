@@ -170,7 +170,9 @@ function backToModes() {
 document.getElementById("btn-back").addEventListener("click", backToModes);
 
 function updateDrawControls() {
-  const broke = !TEST_MODE &&
+  // free daily draws first, Tokens only after they are used up
+  const free = (typeof freeDrawsLeft === "function") ? freeDrawsLeft() : 0;
+  const broke = !TEST_MODE && free <= 0 &&
     (typeof getCookies !== "function" || getCookies() < COOKIE_COST);
   document.getElementById("btn-draw").classList.toggle("hidden", broke);
   document.getElementById("upsell").classList.toggle("hidden", !broke);
@@ -180,16 +182,20 @@ function updateDrawControls() {
       drawn = [];
       pool = IDIOMS.filter(i => i.mode === currentMode);
     }
+    const cost = TEST_MODE ? " · unlimited"
+      : (free > 0 ? ` · free, ${free}/${FREE_DRAWS} left today` : ` · ${COOKIE_COST} Tokens`);
     document.getElementById("btn-draw").textContent =
-      (drawn.length ? "Draw another" : "Draw a chengyu") +
-      (TEST_MODE ? " · unlimited" : ` · ${COOKIE_COST} Tokens`);
+      (drawn.length ? "Draw another" : "Draw a chengyu") + cost;
   }
 }
 
 document.getElementById("btn-draw").addEventListener("click", () => {
-  if (!TEST_MODE && !spendCookies(COOKIE_COST)) {
-    updateDrawControls();
-    return;
+  if (!TEST_MODE) {
+    if (freeDrawsLeft() > 0) recordFreeDraw();
+    else if (!spendCookies(COOKIE_COST)) {
+      updateDrawControls();
+      return;
+    }
   }
 
   let pool = IDIOMS.filter(i => i.mode === currentMode && !drawn.includes(i.ch));

@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Chengyu Clash · Win arguments with Chinese idioms</title>
 <meta name="description" content="Draw Chinese idiom cards to compliment or roast. Learn chengyu the fun way.">
-<link rel="stylesheet" href="style.css?v=65">
+<link rel="stylesheet" href="style.css?v=66">
 </head>
 <body>
 <svg class="icon-sprite" aria-hidden="true" focusable="false">
@@ -126,9 +126,9 @@
           <button id="btn-draw" class="primary big"><svg class="icon" aria-hidden="true"><use href="#icon-draw"></use></svg> Draw a chengyu <span class="zh-sub" lang="zh-CN">抽一张</span></button>
         </div>
         <div id="upsell" class="card upsell hidden">
-          <h3>Earn 2 Tokens to draw</h3>
-          <p>Answer Quiz scenes to earn Chengyu Tokens, then come back and draw a card.</p>
-          <button id="btn-upsell-quiz" class="primary">Go to Quiz <span class="zh-sub" lang="zh-CN">去答题</span></button>
+          <h3>Free draws used up — earn Tokens to keep drawing</h3>
+          <p>Today's 5 free draws are gone. Answer Quiz scenes to earn Chengyu Tokens, then come back — each draw costs 2 Tokens.</p>
+          <button id="btn-upsell-quiz" class="primary">Go to Quiz <span class="zh-sub" lang="zh-CN">去答题赚代币</span></button>
         </div>
       </div>
     </div>
@@ -138,17 +138,17 @@
   <section id="view-quiz" class="hidden" role="tabpanel" aria-labelledby="tab-quiz">
     <div id="quiz-select">
       <h2 class="draw-title">The Chengyu Token Quiz <span class="zh-sub" lang="zh-CN">成语代币答题</span></h2>
-      <p class="quiz-sub" id="quiz-sub">A scene unfolds. Pick or rebuild the perfect chengyu. Every correct answer earns <b>Chengyu Tokens</b>, and 2 Tokens unlock a Draw.</p>
+      <p class="quiz-sub" id="quiz-sub">A scene unfolds. Pick or rebuild the perfect chengyu. You get <b>5 rounds per day</b> across both levels — every correct answer earns <b>Chengyu Tokens</b>, and Tokens unlock extra Draws.</p>
       <div class="modes">
         <button class="mode-card praise" id="btn-easy">
           <span class="mode-icon" aria-hidden="true"><svg class="icon"><use href="#icon-quiz"></use></svg></span>
           <b>Easy <span class="zh-sub" lang="zh-CN">选择题</span></b>
-          <small id="easy-meta">Multiple choice — 4 cards, pick the right one.<br><b>5 rounds / day · +1 Token each</b></small>
+          <small id="easy-meta">Multiple choice — 4 cards, pick the right one.<br><b>+1 Token · shares the 5 daily rounds</b></small>
         </button>
         <button class="mode-card argue" id="btn-hard">
           <span class="mode-icon" aria-hidden="true"><svg class="icon"><use href="#icon-check"></use></svg></span>
           <b>Hard <span class="zh-sub" lang="zh-CN">填空题</span></b>
-          <small id="hard-meta">No options. Rebuild the literal image in English.<br><b>5 rounds / day · +2 Tokens each</b></small>
+          <small id="hard-meta">No options. Rebuild the literal image in English.<br><b>+2 Tokens · shares the 5 daily rounds</b></small>
         </button>
       </div>
       <p class="quiz-attempts" id="quiz-attempts" aria-live="polite"></p>
