@@ -147,5 +147,6 @@ workflows:
       email:
         recipients:
           - YOUR_EMAIL@example.com
-      artifacts:
-        - chengyu-clash-ios-simulator.zip
+    # artifacts 必须是工作流顶层字段（放 publishing 下会报 extra fields not permitted）
+    artifacts:
+      - chengyu-clash-ios-simulator.zip
