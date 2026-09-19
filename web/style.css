@@ -43,15 +43,17 @@
 body {
   font-family: "Nunito", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, "Noto Sans", "Liberation Sans", "Microsoft YaHei", sans-serif;
   color: var(--ink);
-  min-height: 100vh;
+  height: 100vh;      /* app shell: body never scrolls, main is the scroll container.
+                         iOS WKWebView handles root/body scrolling unreliably. */
+  height: 100dvh;
   display: flex; flex-direction: column;
+  overflow: hidden;
   background:
     radial-gradient(560px 420px at 8% -6%,   rgba(216, 67, 47, .20), transparent 65%),
-    radial-gradient(640px 480px at 96% 4%,  rgba(233, 161, 59, .26), transparent 65%),
-    radial-gradient(620px 500px at -6% 78%, rgba(63, 163, 124, .20), transparent 65%),
-    radial-gradient(560px 460px at 92% 96%, rgba(155, 107, 216, .16), transparent 65%),
+    radial-gradient(640px 480px at 96% 4%,   rgba(233, 161, 59, .26), transparent 65%),
+    radial-gradient(620px 500px at -6% 78%,  rgba(63, 163, 124, .20), transparent 65%),
+    radial-gradient(560px 460px at 92% 96%,  rgba(155, 107, 216, .16), transparent 65%),
     linear-gradient(160deg, #FBF3E4, #F6EADA 55%, #F2E4D0);
-  background-attachment: fixed;
 }
 
 /* ---------- header ---------- */
@@ -115,7 +117,8 @@ nav { display: flex; align-items: center; gap: 9px; flex-wrap: wrap; }
 .tab:hover { transform: translateY(-2px) rotate(-1deg); box-shadow: var(--shadow); }
 .tab.active { background: #A93021; color: #FFF6E8; box-shadow: 0 6px 18px rgba(169, 48, 33, .35); }
 
-main { flex: 1; width: 100%; max-width: 1060px; margin: 0 auto; padding: 26px 22px 52px; }
+main { flex: 1; min-height: 0; width: 100%; max-width: 1060px; margin: 0 auto; padding: 26px 22px 52px;
+  overflow-y: auto; -webkit-overflow-scrolling: touch; overscroll-behavior: contain; }
 
 /* ---------- draw flow ---------- */
 .draw-title { text-align: center; margin: 18px 0 6px; font-size: 30px; font-weight: 900; }
@@ -629,7 +632,7 @@ html, body { overscroll-behavior: none; }
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
     align-items: start;
   }
-  .quiz-stage .quiz-scene { grid-column: 1; grid-row: 1 / span 4; position: sticky; top: 86px; }
+  .quiz-stage .quiz-scene { grid-column: 1; grid-row: 1 / span 4; position: sticky; top: 16px; }
   .quiz-stage > #q-options,
   .quiz-stage > #q-hard-box,
   .quiz-stage > #q-result,
