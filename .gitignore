@@ -28,3 +28,6 @@ mobile/android/app/src/main/assets/
 # ---- OS junk ----
 .DS_Store
 Thumbs.db
+
+# ---- editor/agent scratch ----
+.cache/

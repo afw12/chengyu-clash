@@ -26,6 +26,10 @@ public class MainActivity extends BridgeActivity {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.VANILLA_ICE_CREAM) {
             return;
         }
+        // setContentView failure leaves bridge null (no_webview fallback) — skip.
+        if (bridge == null || bridge.getWebView() == null) {
+            return;
+        }
 
         View content = (View) bridge.getWebView().getParent();
         ViewCompat.setOnApplyWindowInsetsListener(content, (v, insets) -> {
